@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>10×10 Clickable Array</title>
+<title>Red and White 10×10 Array</title>
 <style>
   body {
     font-family: sans-serif;
@@ -25,13 +25,21 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #ddd;
     cursor: pointer;
-    transition: background 0.2s;
+    border: 1px solid #aaa;
+    transition: transform 0.1s;
   }
 
-  .circle.on {
-    background: #3b82f6; /* blue for clicked */
+  .circle:hover {
+    transform: scale(1.1);
+  }
+
+  .red {
+    background: #ef4444;
+  }
+
+  .white {
+    background: white;
   }
 
   button {
@@ -47,39 +55,69 @@
   button:hover {
     background: #059669;
   }
+
+  #buttons {
+    display: flex;
+    gap: 1em;
+  }
 </style>
 </head>
 <body>
 
-<h2>10×10 Clickable Array</h2>
+<h2>Red and White 10×10 Array</h2>
 <div id="grid"></div>
-<button id="rearrangeBtn">Rearrange Clicked Circles</button>
+
+<div id="buttons">
+  <button id="rearrangeBtn">Rearrange Reds and Whites</button>
+  <button id="resetBtn">Reset Pattern</button>
+</div>
 
 <script>
   const grid = document.getElementById('grid');
+  let circles = [];
 
-  // Create 100 circles
-  for (let i = 0; i < 100; i++) {
-    const circle = document.createElement('div');
-    circle.classList.add('circle');
-    circle.addEventListener('click', () => {
-      circle.classList.toggle('on');
-    });
-    grid.appendChild(circle);
+  // Build initial 5-red 5-white pattern per row
+  function buildGrid() {
+    grid.innerHTML = '';
+    circles = [];
+
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        const circle = document.createElement('div');
+        circle.classList.add('circle');
+        if (col < 5) {
+          circle.classList.add('red');
+        } else {
+          circle.classList.add('white');
+        }
+        // Toggle color on click (red ↔ white)
+        circle.addEventListener('click', () => {
+          circle.classList.toggle('red');
+          circle.classList.toggle('white');
+        });
+        grid.appendChild(circle);
+        circles.push(circle);
+      }
+    }
   }
 
+  buildGrid();
+
+  // Rearrange: all reds first, then whites
   document.getElementById('rearrangeBtn').addEventListener('click', () => {
-    const circles = Array.from(document.querySelectorAll('.circle'));
-    const onCount = circles.filter(c => c.classList.contains('on')).length;
+    const reds = circles.filter(c => c.classList.contains('red'));
+    const whites = circles.filter(c => c.classList.contains('white'));
+    const newOrder = [...reds, ...whites];
 
-    // Reset all circles
-    circles.forEach(c => c.classList.remove('on'));
+    grid.innerHTML = '';
+    newOrder.forEach(c => grid.appendChild(c));
+  });
 
-    // Turn on the first 'onCount' circles
-    for (let i = 0; i < onCount; i++) {
-      circles[i].classList.add('on');
-    }
+  // Reset to 5-red 5-white rows
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    buildGrid();
   });
 </script>
+
 </body>
 </html>
