@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10×10 Clickable Array</title>
+<style>
+  body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    background: #f8f9fa;
+    margin-top: 2em;
+  }
+
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-gap: 8px;
+  }
+
+  .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .circle.on {
+    background: #3b82f6; /* blue for clicked */
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #10b981;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #059669;
+  }
+</style>
+</head>
+<body>
+
+<h2>10×10 Clickable Array</h2>
+<div id="grid"></div>
+<button id="rearrangeBtn">Rearrange Clicked Circles</button>
+
+<script>
+  const grid = document.getElementById('grid');
+
+  // Create 100 circles
+  for (let i = 0; i < 100; i++) {
+    const circle = document.createElement('div');
+    circle.classList.add('circle');
+    circle.addEventListener('click', () => {
+      circle.classList.toggle('on');
+    });
+    grid.appendChild(circle);
+  }
+
+  document.getElementById('rearrangeBtn').addEventListener('click', () => {
+    const circles = Array.from(document.querySelectorAll('.circle'));
+    const onCount = circles.filter(c => c.classList.contains('on')).length;
+
+    // Reset all circles
+    circles.forEach(c => c.classList.remove('on'));
+
+    // Turn on the first 'onCount' circles
+    for (let i = 0; i < onCount; i++) {
+      circles[i].classList.add('on');
+    }
+  });
+</script>
+</body>
+</html>
