@@ -34,17 +34,9 @@
     transform: scale(1.1);
   }
 
-  .red {
-    background: #ef4444;
-  }
-
-  .white {
-    background: white;
-  }
-
-  .blue {
-    background: #3b82f6;
-  }
+  .red { background: #ef4444; }
+  .white { background: white; }
+  .blue { background: #3b82f6; }
 
   button {
     padding: 10px 20px;
@@ -80,7 +72,7 @@
   const grid = document.getElementById('grid');
   let circles = [];
 
-  // Build the initial pattern (5 red, 5 white per row)
+  // Build the initial grid: 5 red + 5 white per row
   function buildGrid() {
     grid.innerHTML = '';
     circles = [];
@@ -89,20 +81,24 @@
       for (let col = 0; col < 10; col++) {
         const circle = document.createElement('div');
         circle.classList.add('circle');
+
+        // 5 red, then 5 white
         if (col < 5) {
           circle.classList.add('red');
+          circle.dataset.original = 'red';
         } else {
           circle.classList.add('white');
+          circle.dataset.original = 'white';
         }
 
-        // On click: turn red/white to blue, and toggle blue back to original
+        // Click → toggle blue on/off
         circle.addEventListener('click', () => {
           if (circle.classList.contains('blue')) {
-            // toggle blue off → return to white
+            // Turn blue back to its original colour
             circle.classList.remove('blue');
-            circle.classList.add('white');
+            circle.classList.add(circle.dataset.original);
           } else {
-            // make circle blue
+            // Turn red/white to blue
             circle.classList.remove('red', 'white');
             circle.classList.add('blue');
           }
@@ -127,7 +123,7 @@
     newOrder.forEach(c => grid.appendChild(c));
   });
 
-  // Reset to 5 red, 5 white rows
+  // Reset grid to the original 5 red / 5 white pattern
   document.getElementById('resetBtn').addEventListener('click', () => {
     buildGrid();
   });
