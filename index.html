@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Red and White 10×10 Array</title>
+<title>Red, White, and Blue 10×10 Array</title>
 <style>
   body {
     font-family: sans-serif;
@@ -27,7 +27,7 @@
     border-radius: 50%;
     cursor: pointer;
     border: 1px solid #aaa;
-    transition: transform 0.1s;
+    transition: transform 0.1s, background 0.2s;
   }
 
   .circle:hover {
@@ -40,6 +40,10 @@
 
   .white {
     background: white;
+  }
+
+  .blue {
+    background: #3b82f6;
   }
 
   button {
@@ -64,11 +68,11 @@
 </head>
 <body>
 
-<h2>Red and White 10×10 Array</h2>
+<h2>Red, White, and Blue 10×10 Array</h2>
 <div id="grid"></div>
 
 <div id="buttons">
-  <button id="rearrangeBtn">Rearrange Reds and Whites</button>
+  <button id="rearrangeBtn">Rearrange Colours</button>
   <button id="resetBtn">Reset Pattern</button>
 </div>
 
@@ -76,7 +80,7 @@
   const grid = document.getElementById('grid');
   let circles = [];
 
-  // Build initial 5-red 5-white pattern per row
+  // Build the initial pattern (5 red, 5 white per row)
   function buildGrid() {
     grid.innerHTML = '';
     circles = [];
@@ -90,11 +94,20 @@
         } else {
           circle.classList.add('white');
         }
-        // Toggle color on click (red ↔ white)
+
+        // On click: turn red/white to blue, and toggle blue back to original
         circle.addEventListener('click', () => {
-          circle.classList.toggle('red');
-          circle.classList.toggle('white');
+          if (circle.classList.contains('blue')) {
+            // toggle blue off → return to white
+            circle.classList.remove('blue');
+            circle.classList.add('white');
+          } else {
+            // make circle blue
+            circle.classList.remove('red', 'white');
+            circle.classList.add('blue');
+          }
         });
+
         grid.appendChild(circle);
         circles.push(circle);
       }
@@ -103,17 +116,18 @@
 
   buildGrid();
 
-  // Rearrange: all reds first, then whites
+  // Rearrange: blues first, then reds, then whites
   document.getElementById('rearrangeBtn').addEventListener('click', () => {
+    const blues = circles.filter(c => c.classList.contains('blue'));
     const reds = circles.filter(c => c.classList.contains('red'));
     const whites = circles.filter(c => c.classList.contains('white'));
-    const newOrder = [...reds, ...whites];
+    const newOrder = [...blues, ...reds, ...whites];
 
     grid.innerHTML = '';
     newOrder.forEach(c => grid.appendChild(c));
   });
 
-  // Reset to 5-red 5-white rows
+  // Reset to 5 red, 5 white rows
   document.getElementById('resetBtn').addEventListener('click', () => {
     buildGrid();
   });
